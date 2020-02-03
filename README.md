@@ -1,1 +1,1 @@
-# 64-Step-CV-Sequencer
+# Arduino CV Sequencer
