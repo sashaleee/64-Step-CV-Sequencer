@@ -1,4 +1,10 @@
 # Arduino CV Sequencer
+### Features
+* 8 Patterns
+* Up to 64 steps
+* OLED display
+* Save sequence to EEPROM
+* Sync In input from external clock
 
 ## Schematic
 ![Image description](https://github.com/sashaleee/64-Step-CV-Sequencer/blob/master/Schematic.png)
