@@ -11,12 +11,6 @@ void EncoderButton() {
       if (encoderButtonState == LOW) {
         holdEncoderButtonMillis = millis();
 
-        //double click timer and counter
-        if (clickCounter == 0) {
-          encoderButtonFirstClickTime = millis();
-        }
-        clickCounter++;
-
         if (mode == 1) {
           editStep = !editStep; //togle edit step mode
           if (editStep == 1) {
@@ -31,7 +25,6 @@ void EncoderButton() {
           sequenceLastStep = sequenceFirstPattern * 8 + (sequenceLengthPatterns * 8) - 1;
           sequenceCurrentStep = sequenceFirstStep;
           mode = 5;
-          Serial.println("MODE 0");
         }
 
         if (mode == 3) { //select first pattern
@@ -39,9 +32,7 @@ void EncoderButton() {
           sequenceFirstPattern = patternSelected;
           sequenceLengthPatterns = 1;
           encoderPos = sequenceLengthPatterns;
-          //          lastMode = mode;
           mode = 4;
-          Serial.println("MODE 4");
         }
 
         if (mode == 0) {
@@ -57,13 +48,11 @@ void EncoderButton() {
 
             case 1:
               mode = 1;
-              Serial.println("MODE 1");
               encoderPos = editStepNumber;
               break;
 
             case 2:
               mode = 2;
-              Serial.println("MODE 2");
               encoderPos = BPM;
               break;
 
@@ -73,7 +62,6 @@ void EncoderButton() {
 
             case 4:
               mode = 3;
-              Serial.println("MODE 3");
               encoderPos = patternSelected;
               break;
           }
@@ -97,13 +85,7 @@ void EncoderButton() {
     encoderPos = currentMenuItem;
     editStep = 0; //exit edit step if enabled
     mode = 0;
-    Serial.println("MODE 0");
     updateScreen = 1;
-  }
-
-  //reset double click timer and click counter
-  if (clickCounter > 0 && millis() - encoderButtonFirstClickTime > encoderButtonDoubleClickMaxTime) {
-    clickCounter = 0;
   }
   lastEncoderButtonState = currentEncoderButtonState;
 }

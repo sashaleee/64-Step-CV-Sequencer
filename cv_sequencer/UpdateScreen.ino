@@ -60,12 +60,13 @@ void UpdateScreen() {
       display.print(1 + sequenceCurrentStep - currentPattern * 8);
 
       //CV
-      display.fillTriangle(0, 20, 0, 64, sequence[sequenceCurrentStep] >> 1, 42, SSD1306_WHITE);
+      display.fillRect(0, 20, sequence[sequenceCurrentStep] >> 1, 44, SSD1306_WHITE);
       display.setTextSize(4);
       display.setTextColor(SSD1306_INVERSE);
-      display.setCursor(48, 26);
+      display.setCursor(16, 26);
       char hexNumber[2] = {0};
       sprintf(hexNumber, "%02X", sequence[sequenceCurrentStep]); //convert to hex with leading zero
+      display.print("0x");
       display.print(hexNumber);
 
     }
