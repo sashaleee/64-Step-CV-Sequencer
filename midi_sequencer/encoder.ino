@@ -23,11 +23,30 @@ void Encoder() {
     }
 
     if (mode == 1 && editStep == 1) { //edit step
+      if (encoderPos < 0) {
+        encoderPos = 128;
+      }
+      if (encoderPos == 128) {
+        sendNoteOff(lastNote);
+        noteIsOn = 0;
+      }
+      if (encoderPos > 128) {
+        encoderPos = 0;
+      }
       sequence[editStepNumber] = encoderPos;
     }
 
     if (mode == 1 && playStop == 0) {
-      analogWrite(cvPin, sequence[editStepNumber]);
+      //      analogWrite(cvPin, sequence[editStepNumber]);
+      if (noteIsOn == 1) {
+        sendNoteOff(lastNote);
+        noteIsOn = 0;
+      }
+      if (sequence[editStepNumber] != 128) {
+        sendNoteOn(sequence[editStepNumber]);
+        lastNote = sequence[editStepNumber];
+        noteIsOn = 1;
+      }
     }
 
     if (mode == 2) { //edit BPM

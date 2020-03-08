@@ -8,6 +8,11 @@
 #define OLED_RESET     12 // Reset pin # (or -1 if sharing Arduino reset pin) ????
 Adafruit_SSD1306 display(128, 64, &Wire, OLED_RESET);
 
+
+//midi
+byte lastNote;
+byte noteIsOn = 0;
+
 //pins
 byte pinA = 2; //first hardware interrupt pin is digital pin 2
 byte pinB = 3; //second hardware interrupt pin is digital pin 3
@@ -54,6 +59,7 @@ byte messageWindowState = 0;
 String messageWindowText = "V0.7";
 unsigned long messageWindowMillis = 0;
 int messageWindowDelay = 1000;
+//char noteName;
 
 //edit mode
 byte editStep = 0; //edit current step of sequence, 1 -enabled, 0 - disabled
@@ -67,22 +73,25 @@ byte currentMenuItem = 0;
 
 //sequence vars
 byte sequence [64] = {
-  255, 254, 202, 79, 197, 89, 9, 68,
-  255, 200, 90, 10, 230, 0, 89, 34,
-  255, 254, 253, 252, 251, 250, 249, 248,
-  0x00, 1, 2, 3, 4, 5, 6, 7,
-  0x00, 0, 0, 0, 0, 0, 0, 0,
-  0x00, 0, 0, 0, 0, 0, 0, 0,
-  0x00, 0, 0, 0, 0, 0, 0, 0,
-  0x00, 0, 0, 0, 0, 0, 0, 0
+  60, 45, 34, 35, 45, 27, 46, 68,
+  67, 20, 90, 10, 23, 0, 89, 34,
+  128, 128, 128, 128, 128, 128, 128, 128,
+  128, 128, 128, 128, 128, 128, 128, 128,
+  128, 128, 128, 128, 128, 128, 128, 128,
+  128, 128, 128, 128, 128, 128, 128, 128,
+  128, 128, 128, 128, 128, 128, 128, 128,
+  128, 128, 128, 128, 128, 128, 128, 128
 };
+
+char * noteNames[] = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
+
 byte sequenceCurrentStep = 0; //curent step
 byte sequenceFirstPattern = 0; //first active pattern
 byte sequenceLengthPatterns = 1; //how many patterns to play after first pattern
 byte sequenceFirstStep = sequenceFirstPattern * 8; //first step number 00..56
 byte sequenceLastStep = sequenceFirstPattern * 8 + (sequenceLengthPatterns * 8) - 1; // last step number 7..63
 byte playStop = 0; //play mode (0 - stop, 1 - playing)
-
+byte firstStepDelay = 1; //wait for first pulse to come
 
 void setup() {
   //==========*pins configuration*===================
@@ -93,7 +102,8 @@ void setup() {
   pinMode(syncPin, INPUT);
 
   //==========*serial port*===================
-  //  Serial.begin(9600);
+  //  Serial.begin(31250);
+  Serial.begin(9600);
 
   //==========*load data from EEPROM*===================
   for (int i = 0; i < 64; i++) {
