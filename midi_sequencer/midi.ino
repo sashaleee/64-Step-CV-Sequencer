@@ -1,7 +1,7 @@
 void sendNoteOn(int pitch) {
   Serial.write(144);
   Serial.write(pitch);
-  //  Serial.write(127);
+  Serial.write(127);
   //  Serial.print(pitch);
   //  Serial.println(" ON");
 }
