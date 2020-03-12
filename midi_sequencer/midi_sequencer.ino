@@ -12,6 +12,7 @@ Adafruit_SSD1306 display(128, 64, &Wire, OLED_RESET);
 //midi
 byte lastNote;
 byte noteIsOn = 0;
+byte channel;
 
 //pins
 byte pinA = 2; //first hardware interrupt pin is digital pin 2
@@ -31,6 +32,7 @@ volatile byte bFlag = 0;
 int encoderPos = 0;
 int oldEncPos = 0;
 volatile byte reading = 0;
+byte clickCounter = 0;
 
 byte encoderButtonState = 0; //encoder button state
 byte lastEncoderButtonState = HIGH; //last encoder button state
@@ -38,6 +40,8 @@ unsigned long holdEncoderButtonMillis = 0; //how long the button is pressed
 byte holdEncoderButton = 0; // 1 - long press state
 int holdEncoderButtonTime = 1000; //long press time 1 second
 byte mode = 0; //0 - main screen, 1 - edit sequece, 2 - edit tempo, 3 - load, 4 - sequence lrngth, 5 - fake mode
+unsigned long encoderButtonFirstClickTime = 0; //first click time
+int encoderButtonDoubleClickMaxTime = 500; //max time window for diuble click
 
 //clock vars
 int BPM = 100;
@@ -83,6 +87,9 @@ byte sequence [64] = {
   128, 128, 128, 128, 128, 128, 128, 128
 };
 
+//0 - 127 - notes
+//128 - rest
+
 char * noteNames[] = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
 
 byte sequenceCurrentStep = 0; //curent step
@@ -102,8 +109,8 @@ void setup() {
   pinMode(syncPin, INPUT);
 
   //==========*serial port*===================
-  //  Serial.begin(31250);
-  Serial.begin(9600);
+  Serial.begin(31250);
+  //  Serial.begin(9600);
 
   //==========*load data from EEPROM*===================
   for (int i = 0; i < 64; i++) {

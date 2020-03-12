@@ -10,11 +10,11 @@ void SyncIn() {
           }
         }
         if (noteIsOn == 1) {
-          sendNoteOff(lastNote);
+          midiNoteOff(lastNote);
           noteIsOn = 0;
         }
         if (sequence[sequenceCurrentStep] != 128) {
-          sendNoteOn(sequence[sequenceCurrentStep]);
+          midiNoteOn(sequence[sequenceCurrentStep]);
           lastNote = sequence[sequenceCurrentStep];
           noteIsOn = 1;
         }

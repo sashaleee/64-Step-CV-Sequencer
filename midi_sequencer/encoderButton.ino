@@ -11,6 +11,12 @@ void EncoderButton() {
       if (encoderButtonState == LOW) {
         holdEncoderButtonMillis = millis();
 
+        //double click timer and counter
+        if (clickCounter == 0) {
+          encoderButtonFirstClickTime = millis();
+        }
+        clickCounter++;
+
         if (mode == 1) {
           editStep = !editStep; //togle edit step mode
           if (editStep == 1) {
@@ -41,7 +47,7 @@ void EncoderButton() {
             case 0:
               playStop = !playStop;
               if (playStop == 0) {
-                sendNoteOff(lastNote);
+                midiNoteOff(lastNote);
                 noteIsOn = 0;
                 sequenceCurrentStep = sequenceFirstStep; // go to the first step if the sequence has been stopped
                 firstStepDelay = 1;
@@ -83,7 +89,7 @@ void EncoderButton() {
     //exit edit mode and go to play mode
     if (playStop == 0) {
       if (noteIsOn == 1) {
-        sendNoteOff(lastNote);
+        midiNoteOff(lastNote);
         noteIsOn = 0;
       }
     }
@@ -92,5 +98,18 @@ void EncoderButton() {
     mode = 0;
     updateScreen = 1;
   }
+
+  //reset double click timer and click counter
+  if (clickCounter > 0 && millis() - encoderButtonFirstClickTime > encoderButtonDoubleClickMaxTime) {
+    clickCounter = 0;
+  }
+
+  //double click to insert a rest
+  if (clickCounter == 2 && mode == 1) {
+    clickCounter = 0;
+    sequence[editStepNumber] = 128;
+    updateScreen = 1;
+  }
+
   lastEncoderButtonState = currentEncoderButtonState;
 }

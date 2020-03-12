@@ -75,8 +75,14 @@ void UpdateScreen() {
           display.print("---");
         }
       } else {
-        display.setCursor(0, 26);
-        display.print("<<>>");
+        display.setCursor(0, 24);
+        display.setTextSize(2);
+        display.println("MIDI sequencer");
+//        display.println("------------o-------");
+//        display.println("-----o-----o-o---o--");
+//        display.println("o-o-o-o---o---o-o-o-");
+//        display.println("---o---o-o-----o----");
+//        display.print  ("--------o-----------");
       }
     }
 

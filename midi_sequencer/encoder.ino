@@ -27,7 +27,7 @@ void Encoder() {
         encoderPos = 128;
       }
       if (encoderPos == 128) {
-        sendNoteOff(lastNote);
+        midiNoteOff(lastNote);
         noteIsOn = 0;
       }
       if (encoderPos > 128) {
@@ -39,11 +39,11 @@ void Encoder() {
     if (mode == 1 && playStop == 0) {
       //      analogWrite(cvPin, sequence[editStepNumber]);
       if (noteIsOn == 1) {
-        sendNoteOff(lastNote);
+        midiNoteOff(lastNote);
         noteIsOn = 0;
       }
       if (sequence[editStepNumber] != 128) {
-        sendNoteOn(sequence[editStepNumber]);
+        midiNoteOn(sequence[editStepNumber]);
         lastNote = sequence[editStepNumber];
         noteIsOn = 1;
       }
