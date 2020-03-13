@@ -24,13 +24,9 @@ void Encoder() {
 
     if (mode == 1 && editStep == 1) { //edit step
       if (encoderPos < 0) {
-        encoderPos = 128;
+        encoderPos = 129;
       }
-      if (encoderPos == 128) {
-        midiNoteOff(lastNote);
-        noteIsOn = 0;
-      }
-      if (encoderPos > 128) {
+      if (encoderPos > 129) {
         encoderPos = 0;
       }
       sequence[editStepNumber] = encoderPos;
@@ -42,7 +38,7 @@ void Encoder() {
         midiNoteOff(lastNote);
         noteIsOn = 0;
       }
-      if (sequence[editStepNumber] != 128) {
+      if (sequence[editStepNumber] < 128) {
         midiNoteOn(sequence[editStepNumber]);
         lastNote = sequence[editStepNumber];
         noteIsOn = 1;

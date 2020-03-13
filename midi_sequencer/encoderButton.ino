@@ -111,5 +111,12 @@ void EncoderButton() {
     updateScreen = 1;
   }
 
+  //triple click to insert a tie
+  //  if (clickCounter == 3 && mode == 1) {
+  //    clickCounter = 0;
+  //    sequence[editStepNumber] = 129;
+  //    updateScreen = 1;
+  //  }
+
   lastEncoderButtonState = currentEncoderButtonState;
 }

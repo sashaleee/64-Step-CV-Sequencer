@@ -18,7 +18,6 @@ byte channel;
 byte pinA = 2; //first hardware interrupt pin is digital pin 2
 byte pinB = 3; //second hardware interrupt pin is digital pin 3
 byte encoderButtonPin = 4; //encoder button pin
-byte cvPin = 6; //cv out pin
 byte clockPin = 8; // clock pin
 byte syncPin = 9; //sync in pin
 
@@ -41,7 +40,7 @@ byte holdEncoderButton = 0; // 1 - long press state
 int holdEncoderButtonTime = 1000; //long press time 1 second
 byte mode = 0; //0 - main screen, 1 - edit sequece, 2 - edit tempo, 3 - load, 4 - sequence lrngth, 5 - fake mode
 unsigned long encoderButtonFirstClickTime = 0; //first click time
-int encoderButtonDoubleClickMaxTime = 500; //max time window for diuble click
+int encoderButtonDoubleClickMaxTime = 1000; //max time window for diuble click
 
 //clock vars
 int BPM = 100;
@@ -89,6 +88,7 @@ byte sequence [64] = {
 
 //0 - 127 - notes
 //128 - rest
+//129 - tie
 
 char * noteNames[] = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
 
@@ -110,7 +110,7 @@ void setup() {
 
   //==========*serial port*===================
   Serial.begin(31250);
-  //  Serial.begin(9600);
+  //    Serial.begin(9600);
 
   //==========*load data from EEPROM*===================
   for (int i = 0; i < 64; i++) {

@@ -9,11 +9,11 @@ void SyncIn() {
             sequenceCurrentStep = sequenceFirstStep;
           }
         }
-        if (noteIsOn == 1) {
+        if (noteIsOn == 1 && sequence[sequenceCurrentStep] != 129) {
           midiNoteOff(lastNote);
           noteIsOn = 0;
         }
-        if (sequence[sequenceCurrentStep] != 128) {
+        if (sequence[sequenceCurrentStep] < 128) {
           midiNoteOn(sequence[sequenceCurrentStep]);
           lastNote = sequence[sequenceCurrentStep];
           noteIsOn = 1;

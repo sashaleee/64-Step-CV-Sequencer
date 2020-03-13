@@ -66,23 +66,25 @@ void UpdateScreen() {
       int noteNumber = sequence[sequenceCurrentStep];
       if (firstStepDelay == 0) {
         display.fillRect(0, 20, (1 + sequenceCurrentStep - currentPattern * 8) * 16, 44, SSD1306_WHITE);
-        if (noteNumber != 128) {
+        if (noteNumber < 128) {
           byte octave = noteNumber / 12;
           byte noteInOctave = noteNumber % 12;
           display.print(noteNames[noteInOctave]);
           display.print(octave);
-        } else {
-          display.print("---");
+        } else if (noteNumber == 128) {
+          display.print("-");
+        } else if (noteNumber == 129) {
+          display.print("t");
         }
       } else {
         display.setCursor(0, 24);
         display.setTextSize(2);
         display.println("MIDI sequencer");
-//        display.println("------------o-------");
-//        display.println("-----o-----o-o---o--");
-//        display.println("o-o-o-o---o---o-o-o-");
-//        display.println("---o---o-o-----o----");
-//        display.print  ("--------o-----------");
+        //        display.println("------------o-------");
+        //        display.println("-----o-----o-o---o--");
+        //        display.println("o-o-o-o---o---o-o-o-");
+        //        display.println("---o---o-o-----o----");
+        //        display.print  ("--------o-----------");
       }
     }
 
@@ -107,23 +109,25 @@ void UpdateScreen() {
           display.setCursor(i * 32, (n + 1) * 22);
           display.setTextSize(2);
           int noteNumber = sequence[(n * 4 + i) + currentEditPattern * 8];
-          if (noteNumber != 128) {
+          if (noteNumber < 128) {
             byte octave = noteNumber / 12;
             byte noteInOctave = noteNumber % 12;
             display.print(noteNames[noteInOctave]);
             display.setTextSize(1);
             display.print(octave);
-          } else {
+          } else if (noteNumber == 128) {
             display.print("-");
+          } else if (noteNumber == 129) {
+            display.print("t");
           }
         }
       }
     }
 
     if (mode == 2) {//BPM screen
-      display.setTextSize(3);
-      display.setCursor(40, 22);
-      display.print(BPM);
+//      display.setTextSize(3);
+//      display.setCursor(40, 22);
+//      display.print(BPM);
       if (flicker == 1) {
         display.fillRect(0, 0, 64, 64, SSD1306_INVERSE);
 
