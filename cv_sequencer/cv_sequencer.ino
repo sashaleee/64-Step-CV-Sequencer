@@ -4,6 +4,9 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <EEPROM.h>
+#include <Adafruit_MCP4725.h>
+
+Adafruit_MCP4725 dac;
 
 #define OLED_RESET     12 // Reset pin # (or -1 if sharing Arduino reset pin) ????
 Adafruit_SSD1306 display(128, 64, &Wire, OLED_RESET);
@@ -91,6 +94,8 @@ void setup() {
   pinMode(encoderButtonPin, INPUT_PULLUP);
   pinMode(clockPin, OUTPUT);
   pinMode(syncPin, INPUT);
+
+  dac.begin(0x60);
 
   //==========*serial port*===================
   //  Serial.begin(9600);

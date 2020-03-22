@@ -15,9 +15,11 @@ void UpdateScreen() {
   if (millis() - messageWindowMillis > messageWindowDelay && messageWindowState == 2) {
     messageWindowState = 0;
     updateScreen = 1;
+    //          Serial.println("updated");
+
   }
 
-  if (updateScreen == 1 && messageWindowState == 0) {
+  if (updateScreen == 1 && messageWindowState == 0 && (millis() - lastUpdateTime > minUpdateDelayTime)) {
     display.clearDisplay();
 
     if (mode == 0) { // main screen mode
@@ -51,7 +53,7 @@ void UpdateScreen() {
           break;
       }
 
-      //play stop
+      //patternt:step
       display.setTextColor(SSD1306_WHITE); // draw white text
       display.print(" ");
       int currentPattern = sequenceCurrentStep >> 3;
@@ -74,7 +76,7 @@ void UpdateScreen() {
         } else if (noteNumber == 128) {
           display.print("-");
         } else if (noteNumber == 129) {
-          display.print("t");
+          display.print("*");
         }
       } else {
         display.setCursor(0, 24);
@@ -118,16 +120,16 @@ void UpdateScreen() {
           } else if (noteNumber == 128) {
             display.print("-");
           } else if (noteNumber == 129) {
-            display.print("t");
+            display.print("*");
           }
         }
       }
     }
 
     if (mode == 2) {//BPM screen
-//      display.setTextSize(3);
-//      display.setCursor(40, 22);
-//      display.print(BPM);
+      //      display.setTextSize(3);
+      //      display.setCursor(40, 22);
+      //      display.print(BPM);
       if (flicker == 1) {
         display.fillRect(0, 0, 64, 64, SSD1306_INVERSE);
 
@@ -158,5 +160,6 @@ void UpdateScreen() {
 
     display.display();
     updateScreen = 0;
+    lastUpdateTime = millis();
   }
 }

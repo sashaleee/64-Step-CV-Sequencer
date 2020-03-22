@@ -43,6 +43,8 @@ void EncoderButton() {
               if (playStop == 0) {
                 sequenceCurrentStep = sequenceFirstStep; // go to the first step if the sequence has been stopped
                 analogWrite(cvPin, 0); //output cv 0v when stopped
+                dac.setVoltage(0, false);
+
               }
               break;
 
@@ -81,6 +83,8 @@ void EncoderButton() {
     //exit edit mode and go to play mode
     if (playStop == 0) {
       analogWrite(cvPin, 0);
+      dac.setVoltage(0, false);
+
     }
     encoderPos = currentMenuItem;
     editStep = 0; //exit edit step if enabled

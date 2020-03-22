@@ -28,6 +28,8 @@ void Encoder() {
 
     if (mode == 1 && playStop == 0) {
       analogWrite(cvPin, sequence[editStepNumber]);
+      dac.setVoltage(sequence[editStepNumber] * 20, false);
+
     }
 
     if (mode == 2) { //edit BPM

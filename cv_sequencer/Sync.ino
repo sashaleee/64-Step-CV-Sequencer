@@ -8,11 +8,13 @@ void SyncIn() {
           sequenceCurrentStep = sequenceFirstStep;
         }
         analogWrite(cvPin, sequence[sequenceCurrentStep]);
+        dac.setVoltage(sequence[sequenceCurrentStep] * 20, false);
+
         if (mode == 0) {
-          updateScreen = 1; //refresh screen in play mode
-        }
+        updateScreen = 1; //refresh screen in play mode
       }
-      if (mode == 2) {
+    }
+    if (mode == 2) {
         flicker = !flicker;
         updateScreen = 1; //refresh screen in play mode
       }

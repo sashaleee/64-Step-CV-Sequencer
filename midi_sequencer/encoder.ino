@@ -1,7 +1,14 @@
 void Encoder() {
+  byte i;
+  i = rotary.rotate();
+  if ( i == 1 ) {
+    encoderPos ++;
+  }
+  if ( i == 2 ) {
+    encoderPos --;
+  }
+
   if (oldEncPos != encoderPos) {
-    lastChangeTime = millis(); //store millis of last encoder change
-    encoderScreenUpdateDelay = 1; //enable 30 ms delay before calling updateScreen
     if (mode == 0) { //main screen
       if (encoderPos < 0) {
         encoderPos = 4;
@@ -33,7 +40,6 @@ void Encoder() {
     }
 
     if (mode == 1 && playStop == 0) {
-      //      analogWrite(cvPin, sequence[editStepNumber]);
       if (noteIsOn == 1) {
         midiNoteOff(lastNote);
         noteIsOn = 0;
@@ -78,16 +84,6 @@ void Encoder() {
     }
 
     oldEncPos = encoderPos;
-
-    if (playStop == 0) { //update screen immediately if sequence is not running
-      updateScreen = 1;
-    }
-  }
-
-  //if sequence is running wait 30 ms after last encoder change before updating screen to reduce lag
-  if ((millis() - lastChangeTime > 30) && (encoderScreenUpdateDelay == 1) && playStop == 1) {
     updateScreen = 1;
-    encoderScreenUpdateDelay = 0; //disable delay
   }
-
 }

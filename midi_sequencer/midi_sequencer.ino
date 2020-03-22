@@ -5,6 +5,11 @@
 #include <Adafruit_SSD1306.h>
 #include <EEPROM.h>
 
+//
+#include <SimpleRotary.h>
+SimpleRotary rotary(5, 6, 4);
+//
+
 #define OLED_RESET     12 // Reset pin # (or -1 if sharing Arduino reset pin) ????
 Adafruit_SSD1306 display(128, 64, &Wire, OLED_RESET);
 
@@ -55,11 +60,11 @@ byte lastSyncReading = 0;
 byte syncReading = 0;
 
 //screen vars
-byte updateScreen = 0;
-unsigned long lastChangeTime = 0;
-byte encoderScreenUpdateDelay = 0;
+volatile byte updateScreen = 0;
+unsigned long lastUpdateTime = 0;
+int minUpdateDelayTime = 50;
 byte messageWindowState = 0;
-String messageWindowText = "V0.7";
+String messageWindowText = "V0.8";
 unsigned long messageWindowMillis = 0;
 int messageWindowDelay = 1000;
 //char noteName;
@@ -92,7 +97,7 @@ byte sequence [64] = {
 
 char * noteNames[] = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
 
-byte sequenceCurrentStep = 0; //curent step
+volatile byte sequenceCurrentStep = 0; //curent step
 byte sequenceFirstPattern = 0; //first active pattern
 byte sequenceLengthPatterns = 1; //how many patterns to play after first pattern
 byte sequenceFirstStep = sequenceFirstPattern * 8; //first step number 00..56
@@ -102,15 +107,23 @@ byte firstStepDelay = 1; //wait for first pulse to come
 
 void setup() {
   //==========*pins configuration*===================
-  pinMode(pinA, INPUT_PULLUP);
-  pinMode(pinB, INPUT_PULLUP);
+  //  pinMode(pinA, INPUT_PULLUP);
+  //  pinMode(pinB, INPUT_PULLUP);
+  pinMode(2, INPUT);
+
+  pinMode(5, INPUT_PULLUP);
+  pinMode(6, INPUT_PULLUP);
   pinMode(encoderButtonPin, INPUT_PULLUP);
   pinMode(clockPin, OUTPUT);
-  pinMode(syncPin, INPUT);
+  //  pinMode(syncPin, INPUT);
+
+  //  rotary.setTrigger(LOW);
+  //  rotary.setDebounceDelay(15);
+  //  rotary.setErrorDelay(50);
 
   //==========*serial port*===================
   Serial.begin(31250);
-  //    Serial.begin(9600);
+  //  Serial.begin(9600);
 
   //==========*load data from EEPROM*===================
   for (int i = 0; i < 64; i++) {
@@ -133,15 +146,17 @@ void setup() {
   display.cp437(true); //Use full 256 char 'Code Page 437' font
   updateScreen = 1;
 
+
   //==========*interrupts*===================
-  attachInterrupt(0, PinA, RISING);
-  attachInterrupt(1, PinB, RISING);
+  attachInterrupt(0, SyncIn, RISING);
+
+  //  attachInterrupt(0, PinA, RISING);
+  //  attachInterrupt(1, PinB, RISING);
 }
 
 void loop() {
   Encoder();
   EncoderButton();
   BPMClock();
-  SyncIn();
   UpdateScreen();
 }
